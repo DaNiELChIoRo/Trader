@@ -8,7 +8,7 @@ import plotly.graph_objs as go
 import functools
 import datetime
 import  sched, time
-from bitso_requester import get_account_balance, get_tricker, place_order
+from services.bitso_requester import get_account_balance, get_tricker, place_order, get_last_transactions
 
 s = sched.scheduler(time.time, time.sleep)
 sleep = 60 * 10
@@ -18,8 +18,8 @@ def main():
     s.enter(0, 1, make_calculus, (s,))
     s.run()  
 
-def make_calculus(sc=s):
-    print("making calculations")
+def make_calculus(sc):
+    print("making calculations", datetime.datetime.now())
     s.enter(sleep, 1, make_calculus, (sc, ))
     calculate('BTC-USD')
     calculate('ETH-USD')
@@ -28,6 +28,9 @@ def make_calculus(sc=s):
     calculate('LTC-USD')
 
 def trade(currency, action):
+    """
+        Decides whether to place the order in type sell or buy 
+    """
     #TODO:- When buy or sell cross marked place a stop loss and limited order for the crest!.
     balances = get_account_balance()
     if action == 'BUY':

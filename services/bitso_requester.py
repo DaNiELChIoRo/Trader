@@ -16,15 +16,18 @@ bitso_secret = os.getenv("bitso_secret")
 request_path="/v3/balance/"
 
 def main():
-    print("Calling requests")    
-    print("account balance:", get_account_balance() )
-    get_user_trades()
-    get_available_books()
-    get_tricker()
-    get_last_transactions()
+    # print("Calling requests")    
+    # print("account balance:", get_account_balance() )
+    # get_user_trades()
+    # get_available_books()
+    # get_tricker()
+    # get_last_transactions()
+    # print("cancel all orders: ", cancel_order())
     print("\n $$$$$\tuser open orders: ", get_open_orders())
     print("\n\n")
-    __test_(action='SELL')
+    print(__test_(action='BUY'))
+    print("\n\n")
+    print("\n $$$$$\tuser open orders: ", get_open_orders())
 
 def __test_(currency = "eth", action = 'BUY'):
     """
@@ -45,10 +48,10 @@ def __test_(currency = "eth", action = 'BUY'):
                 # calculation the amount of crypto per budget.
                 amount = float("{:.5f}".format(budget/prices[1])) #balance/(2 * 4)
                 #Getting the highest price to buy
-                price = prices[0]
+                price = prices[0] + 1
                 print("$$$$$$ he order to ", action, " will be place with price ", price, " and amount of cryptos", amount, "\n")
                 # placing the order!
-                place_order(amount, price, side=action.lower())
+                return place_order(amount, price, book=currency+"_mxn" ,side=action.lower())
     elif action == 'SELL':
         cripto_currency = filter(lambda x: x["currency"] == currency, balances)
         print('## cripto currency: ', cripto_currency)
@@ -84,6 +87,8 @@ def __make_request__(path, params = {}, type = 'GET'):
         response = requests.get("https://api.bitso.com" + request_path, headers={"Authorization": auth_header})
     elif type == 'POST':
         response = requests.post("https://api.bitso.com" + request_path, json = params, headers={"Authorization": auth_header})
+    elif type == 'DELETE': 
+        response = requests.delete("https://api.bitso.com" + request_path, json = params, headers={"Authorization": auth_header})
     result = json.loads(response.content)    
     if result["success"]:
         return result["payload"]   

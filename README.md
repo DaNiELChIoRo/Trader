@@ -7,11 +7,11 @@ the cross and charts information is are retrived from the Yahoo Finance API by t
 Which is tide to the USD currency pair. That is, is only going to retrieve books with the USD currency, ex; USD-ETH. 
 
 ## Graphics
-By the default the charts are turned off but can be turn on by erasing the default parameters ´show´in the ´make_calculus´function
+By the default the charts are turned off but can be turn on by erasing the default parameters `show`in the `make_calculus`function
 ir setting it to True 
 
 ## Requester
-Performs requests to the Bitso's API which can be consulted at ´https://bitso.com/developers´.
+Performs requests to the Bitso's API which can be consulted at `https://bitso.com/developers`.
 
-In order to make it work you most create a .env file with ´bitso_secret´ and ´bitso_key´ variables 
+In order to make it work you most create a .env file with `bitso_secret` and `bitso_key` variables 
 which has to be created by registering on the Bitso's developer platform.

@@ -7,6 +7,7 @@ from decimal import Decimal
 from requests.api import request
 import os
 from dotenv import load_dotenv
+# import trader
 
 load_dotenv()
 
@@ -25,7 +26,7 @@ def main():
     # print("cancel all orders: ", cancel_order())
     print("\n $$$$$\tuser open orders: ", get_open_orders())
     print("\n\n")
-    print(__test_(action='BUY'))
+    print(__test_(currency="xrp", action='SELL'))
     print("\n\n")
     print("\n $$$$$\tuser open orders: ", get_open_orders())
 
@@ -33,40 +34,7 @@ def __test_(currency = "eth", action = 'BUY'):
     """
         Internal test for placeing orders!.
     """
-    balances = get_account_balance()
-    if action == 'BUY':
-        fiat_currency = filter(lambda x: x["currency"] == "mxn", balances)
-        # print('## fiat currency: ', fiat_currency)
-        balance = float(fiat_currency[0]['available'])
-        print("user account currency balance: ", balance)
-        if balance > 0:
-            # gettin' the last trade prices for that asset!
-            prices = get_last_transactions(currency + "_mxn")
-            if prices:
-                # TRyin' to apply saffe rules
-                budget = 100 #balance/(2 * 4)
-                # calculation the amount of crypto per budget.
-                amount = float("{:.5f}".format(budget/prices[1])) #balance/(2 * 4)
-                #Getting the highest price to buy
-                price = prices[0] + 1
-                print("$$$$$$ he order to ", action, " will be place with price ", price, " and amount of cryptos", amount, "\n")
-                # placing the order!
-                return place_order(amount, price, book=currency+"_mxn" ,side=action.lower())
-    elif action == 'SELL':
-        cripto_currency = filter(lambda x: x["currency"] == currency, balances)
-        print('## cripto currency: ', cripto_currency)
-        if cripto_currency:
-            balance = float(cripto_currency['available'])
-            print("user account currency balance: ", balance)
-            if balance > 0:
-                # gettin' the last trade prices for that asset!
-                prices = get_last_transactions(currency + "_mxn")
-                if prices:
-                    # Tryin' to apply saffe rules
-                    budget = balance/(2 * 4)
-                    # calculation the amount of crypto per budget.
-        else:
-            return Exception('No crypto assets available for transaction!!')
+    # return trader.make_order(currency=currency, action=action)
 # Create signature
 def __getSignature__(http_method = 'GET', request_path = '/v3/balance/', parameters={}):
     nonce =  str(int(round(time.time() * 1000)))
@@ -140,15 +108,9 @@ def get_available_books(book_name = 'eth_mxn'):
         Returns the list of availbale books (cryptos) to trade 
 
         example: [u'btc_mxn', u'eth_btc', u'eth_mxn', u'xrp_btc']
-    """
-    nonce =  str(int(round(time.time() * 1000)))
-    request_path = '/v3/available_books/'
-    signature = __getSignature__(request_path=request_path)
-    # Build the auth header
-    auth_header = 'Bitso %s:%s:%s' % (bitso_key, nonce, signature)  
-
-    response = requests.get("https://api.bitso.com" + request_path, headers={"Authorization": auth_header})    
-    result = json.loads(response.content)
+    """    
+    request_path = '/v3/available_books/'    
+    result = __make_request__(path=request_path)
     # print("available books response: ", result)
     if result["success"]:
         payload = result['payload']
@@ -191,8 +153,8 @@ def get_last_transactions(book = 'btc_mxn'):
     min_ask = float(str(min(map(lambda x: x["price"], payload["asks"]))))
     max_bid = float(str(max(map(lambda x: x["price"], payload["bids"]))))
     delta = min_ask - max_bid
-    print("max_bid: ", max_bid, " min_ask: ", min_ask)
-    print('highest buy: ', max_bid, ' lowest sell: ', min_ask, " fair price: ", delta)
+    # print("max_bid: ", max_bid, " min_ask: ", min_ask)
+    print('%%%% last_transsactions highest buy: ', max_bid, ' lowest sell: ', min_ask, " fair price: ", min_ask + (delta/2), ' delta: ', delta)
     return (max_bid, min_ask, delta)
 
 def place_order(amount, price, book = "btc_mxn", side = "BUY", type = 'limit', time_in_force = 'immediateorcancel'):

@@ -1,1 +1,1 @@
-import bitso_requester
+import bitso_requester, trader

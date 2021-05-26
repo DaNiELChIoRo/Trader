@@ -6,7 +6,7 @@ def make_order(currency, action):
     action = action.upper()
     if action == 'BUY':
         fiat_currency = filter(lambda x: x["currency"] == "mxn", balances)[0]
-        cripto_currency = filter(lambda x: x["currency"] == currency, balances)[0]
+        cripto_currency = filter(lambda x: x["currency"] == currency, balances)[0] if currency in map(lambda x: x["currency"], balances)  else {'available': 0}
         # print('## fiat currency: ', fiat_currency)
         balance = (float(fiat_currency['available']), float(cripto_currency['available']))
         print("user account currency balance: ", balance)
@@ -15,7 +15,7 @@ def make_order(currency, action):
             prices = get_last_transactions(currency + "_mxn")
             if prices:
                 # TRyin' to apply saffe rules
-                budget = 100 #balance/(2 * 4)
+                budget = 2000 #balance/(2 * 4)
                 # calculation the amount of crypto per budget.
                 amount = float("{:.5f}".format(budget/prices[1])) #balance/(2 * 4)
                 #Getting the highest price to buy

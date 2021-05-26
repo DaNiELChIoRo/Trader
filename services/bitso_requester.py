@@ -26,7 +26,7 @@ def main():
     # print("cancel all orders: ", cancel_order())
     print("\n $$$$$\tuser open orders: ", get_open_orders())
     print("\n\n")
-    print(__test_(currency="xrp", action='SELL'))
+    print(__test_(currency="ltc", action='BUY'))
     print("\n\n")
     print("\n $$$$$\tuser open orders: ", get_open_orders())
 
@@ -34,7 +34,7 @@ def __test_(currency = "eth", action = 'BUY'):
     """
         Internal test for placeing orders!.
     """
-    # return trader.make_order(currency=currency, action=action)
+    return trader.make_order(currency=currency, action=action)
 # Create signature
 def __getSignature__(http_method = 'GET', request_path = '/v3/balance/', parameters={}):
     nonce =  str(int(round(time.time() * 1000)))

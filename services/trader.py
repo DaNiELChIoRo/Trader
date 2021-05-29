@@ -1,5 +1,11 @@
 
 from bitso_requester import get_account_balance, get_tricker, place_order, get_last_transactions
+import sys
+
+def __main__(*args):
+    print "currency: " + args[0] + " action: " + args[1]
+    make_order(currency=args[0], action=args[1])
+    
 
 def make_order(currency, action):
     balances = get_account_balance()
@@ -9,7 +15,7 @@ def make_order(currency, action):
         cripto_currency = filter(lambda x: x["currency"] == currency, balances)[0] if currency in map(lambda x: x["currency"], balances)  else {'available': 0}
         # print('## fiat currency: ', fiat_currency)
         balance = (float(fiat_currency['available']), float(cripto_currency['available']))
-        print("user account currency balance: ", balance)
+        print "user account currency balance: ", balance
         if balance[0] > 0 and balance[1] <= 0:
             # gettin' the last trade prices for that asset!
             prices = get_last_transactions(currency + "_mxn")
@@ -23,6 +29,8 @@ def make_order(currency, action):
                 print("$$$$$$ the order to ", action, " will be place with price ", price, " and amount of cryptos", amount, "\n")
                 # placing the order!
                 return place_order(amount, price, book=currency+"_mxn" ,side=action.lower())
+        else:
+            print "Not enough balance available to perform the order! :C"
     elif action == 'SELL':
         cripto_currency = filter(lambda x: x["currency"] == currency, balances)[0]
         print('## cripto currency: ', cripto_currency)
@@ -41,3 +49,6 @@ def make_order(currency, action):
                     return place_order(amount, price, book=currency+"_mxn" ,side=action.lower())
         else:
             return Exception('No crypto assets available for transaction!!')
+
+if __name__ == '__main__':
+    __main__(*sys.argv[1:])

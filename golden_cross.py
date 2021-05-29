@@ -9,6 +9,7 @@ import functools
 import datetime
 import  sched, time
 from services.trader import make_order
+import sys
 
 s = sched.scheduler(time.time, time.sleep)
 sleep = 60 * 10
@@ -207,4 +208,7 @@ def to_seconds(date):
 #     return x, y
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) <= 0:
+        main()
+    else:
+        calculate(pair=sys.argv[1])

@@ -208,7 +208,7 @@ def to_seconds(date):
 #     return x, y
 
 if __name__ == "__main__":
-    if len(sys.argv) <= 0:
+    if len(sys.argv) >= 1:
         main()
     else:
         calculate(pair=sys.argv[1])

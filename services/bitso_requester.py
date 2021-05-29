@@ -16,19 +16,25 @@ bitso_key = os.getenv("bitso_key")
 bitso_secret = os.getenv("bitso_secret")
 request_path="/v3/balance/"
 
+class RequestError(Exception):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
 def main():
-    # print("Calling requests")    
-    # print("account balance:", get_account_balance() )
+    # print"Calling requests")    
+    print "account balance:", get_account_balance() 
     # get_user_trades()
     # get_available_books()
     # get_tricker()
     # get_last_transactions()
-    # print("cancel all orders: ", cancel_order())
-    print("\n $$$$$\tuser open orders: ", get_open_orders())
-    print("\n\n")
-    print(__test_(currency="ltc", action='BUY'))
-    print("\n\n")
-    print("\n $$$$$\tuser open orders: ", get_open_orders())
+    # print"cancel all orders: ", cancel_order())
+    print "\n\n"
+    print "\n $$$$$\tuser open orders: ", get_open_orders()
+    # print__test_(currency="ltc", action='BUY'))
+    print "\n\n"
+    print "\n $$$$$\tuser open orders: ", get_open_orders()
 
 def __test_(currency = "eth", action = 'BUY'):
     """
@@ -60,17 +66,21 @@ def __make_request__(path, params = {}, type = 'GET'):
     result = json.loads(response.content)    
     if result["success"]:
         return result["payload"]   
+    else:
+        print "rise error : ", result 
+        raise RequestError(result)
 
 def get_account_balance():
     r""" 
         Retrieves the user's account NON ZERO balance in the differente assets he/she has.        
     """
     result = __make_request__(path=request_path)
-    
-    payload = result["balances"]
-    # print("balance payload: ", payload)        
-    balance = filter(lambda x: float(x["available"]) > 0, payload)
-    return balance
+    try:
+        payload = result["balances"]
+        balance = filter(lambda x: float(x["available"]) > 0, payload)
+        return balance
+    except Exception as e:
+        print "balance payload error "+e        
 
 def get_user_trades():
     """

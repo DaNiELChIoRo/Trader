@@ -111,14 +111,14 @@ def get_available_books(book_name = 'eth_mxn'):
     """    
     request_path = '/v3/available_books/'    
     result = __make_request__(path=request_path)
-    # print("available books response: ", result)
+    # print"available books response: ", result)
     if result["success"]:
         payload = result['payload']
         books = map(lambda x: x["book"], payload)
         book = filter(lambda x: x["book"] == book_name, payload)[0]
-        print("\n\n %%book ", book_name, ": ", book, "\n\n")
-        print("\n$$$ min price for ", book_name, ": ", book["minimum_price"], " and max price: ", book["maximum_price"], " average: \n")
-        print("books: ", books)
+        print "\n\n %%book ", book_name, ": ", book, "\n\n"
+        print "\n$$$ min price for ", book_name, ": ", book["minimum_price"], " and max price: ", book["maximum_price"], " average: \n"
+        print "books: ", books
         return books
 
 def get_tricker(book = 'btc_mxn'):
@@ -133,7 +133,7 @@ def get_tricker(book = 'btc_mxn'):
         
     high = float(payload["bid"])
     low = float(payload["ask"])
-    print('highest buy: ', high, ' lowest sell: ', low)
+    print 'highest buy: ', high, ' lowest sell: ', low
     return ("{:.2f}".format(high), "{:.2f}".format(low))
 
 def get_last_transactions(book = 'btc_mxn'):
@@ -146,15 +146,15 @@ def get_last_transactions(book = 'btc_mxn'):
     request_path = '/v3/order_book/?book=' + book
 
     payload = __make_request__(request_path)    
-    # print("last trades payload: ", payload)
+    # print"last trades payload: ", payload)
     low = payload["bids"][0]
     high = payload["asks"][0]
 
     min_ask = float(str(min(map(lambda x: x["price"], payload["asks"]))))
     max_bid = float(str(max(map(lambda x: x["price"], payload["bids"]))))
     delta = min_ask - max_bid
-    # print("max_bid: ", max_bid, " min_ask: ", min_ask)
-    print('%%%% last_transsactions highest buy: ', max_bid, ' lowest sell: ', min_ask, " fair price: ", min_ask + (delta/2), ' delta: ', delta)
+    # print"max_bid: ", max_bid, " min_ask: ", min_ask)
+    print '%%%% last_transsactions highest buy: ', max_bid, ' lowest sell: ', min_ask, " fair price: ", min_ask + (delta/2), ' delta: ', delta
     return (max_bid, min_ask, delta)
 
 def place_order(amount, price, book = "btc_mxn", side = "BUY", type = 'limit', time_in_force = 'immediateorcancel'):
@@ -178,7 +178,7 @@ def place_order(amount, price, book = "btc_mxn", side = "BUY", type = 'limit', t
     auth_header = 'Bitso %s:%s:%s' % (bitso_key, nonce, signature)  
 
     response = requests.post("https://api.bitso.com" + request_path, json = params, headers={"Authorization": auth_header})
-    print("response: ", response.content)
+    print"response: ", response.content
     result = json.loads(response.content)
     if result["success"]:
         return result["payload"]

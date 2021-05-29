@@ -36,7 +36,11 @@ def trade(currency, action):
 
 def calculate(pair, period = '8d', interval = '90m', show = True):
 #Importing market data
-    data = yf.download(tickers=pair, period = period, interval = interval)
+    try:
+        data = yf.download(tickers=pair, period = period, interval = interval)
+    except:
+        calculate(pair=pair, period=period, show=show)
+        print("Calculate after error!!!, ", error)
 
     #Adding Moving average calculated field
     data['MA5'] = data['Close'].rolling(5).mean()

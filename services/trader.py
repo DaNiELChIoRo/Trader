@@ -10,6 +10,7 @@ def __main__(*args):
 def make_order(currency, action):
     balances = get_account_balance()
     action = action.upper()
+    currency_available_in_user_balance = currency in map(lambda x: ["currency"], balances)   
     if action == 'BUY':
         fiat_currency = filter(lambda x: x["currency"] == "mxn", balances)[0]
         cripto_currency = filter(lambda x: x["currency"] == currency, balances)[0] if currency in map(lambda x: x["currency"], balances)  else {'available': 0}
@@ -32,6 +33,9 @@ def make_order(currency, action):
         else:
             print "Not enough balance available to perform the order! :C"
     elif action == 'SELL':
+        if currency_available_in_user_balance == False:
+            print "the user does not account the requested currency! :C"
+            return
         cripto_currency = filter(lambda x: x["currency"] == currency, balances)[0]
         print('## cripto currency: ', cripto_currency)
         if cripto_currency:

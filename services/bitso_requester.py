@@ -68,7 +68,7 @@ def __make_request__(path, params = {}, type = 'GET'):
         return result["payload"]   
     else:
         print "rise error : ", result 
-        raise RequestError(result)
+        raise RequestError(result["error"])
 
 def get_account_balance():
     r""" 

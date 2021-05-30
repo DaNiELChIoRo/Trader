@@ -96,7 +96,7 @@ def get_open_orders(book = 'btc_mxn'):
         Retrieves the user's open orders from the given book
     """
     
-    path = '/v3/open_orders?book=btc_mxn'
+    path = '/v3/open_orders?book=' + book
     result = __make_request__(path)
     
     return result

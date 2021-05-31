@@ -25,7 +25,7 @@ def make_order(currency, action, type="fixed"):
             prices = get_last_transactions(currency + "_mxn")
             if prices:
                 # TRyin' to apply saffe rules
-                budget = balance[0]/(2 * 4) if type == "fixed" else balance[0]
+                budget = balance[0] / 2 if type == "fixed" else balance[0]
                 # print "budget: " + budget
                 # calculation the amount of crypto per budget.
                 amount = float("{:.5f}".format(budget/prices[1])) #balance/(2 * 4)

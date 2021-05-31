@@ -109,9 +109,12 @@ def cancel_order(order_id = "all"):
 
     """
     path = '/v3/orders/' + order_id
-    request = __make_request__(path, type='DELETE');
-    
-    return request
+    try:
+        request = __make_request__(path, type='DELETE');    
+        return request
+    except Exception as e:
+        print "error while canceling order ", e, " retrying!"
+        cancel_order(order_id=order_id)
 
 def get_available_books(book_name = 'eth_mxn'):
     r""" 
@@ -120,9 +123,9 @@ def get_available_books(book_name = 'eth_mxn'):
         example: [u'btc_mxn', u'eth_btc', u'eth_mxn', u'xrp_btc']
     """    
     request_path = '/v3/available_books/'    
-    result = __make_request__(path=request_path)
+    try: 
+        result = __make_request__(path=request_path)
     # print"available books response: ", result)
-    if result["success"]:
         payload = result['payload']
         books = map(lambda x: x["book"], payload)
         book = filter(lambda x: x["book"] == book_name, payload)[0]

@@ -20,7 +20,7 @@ def make_order(currency, action, type="fixed"):
         balance = (float(fiat_currency['available']), float(cripto_currency['available']))
         print '## balance: ', fiat_currency
         print "user account currency balance: ", balance
-        if balance[0] > 0 and (type == 'all' or balance[1] <= 0):
+        if balance[0] > 1 and (type == 'all' or balance[1] <= 0):
             # gettin' the last trade prices for that asset!
             prices = get_last_transactions(currency + "_mxn")
             if prices:
@@ -34,12 +34,12 @@ def make_order(currency, action, type="fixed"):
                 print("$$$$$$ the order to ", action, " will be place with price ", price, " and amount of cryptos", amount, "\n")
                 # placing the order!
                 placed_order = place_order(amount, price, book=currency+"_mxn" ,side=action.lower())
-                time.sleep(1)
+                time.sleep(2)
                 # Forcing the selling!
                 while len(get_open_orders(currency+'_mxn')) > 0:
                     cancel_order()
                     make_order(currency=currency, action=action, type=type)
-                    time.sleep(1)
+                    time.sleep(2)
                 return placed_order
         elif balance[1] >= 0:
             print "You alredy has this crypto-currency !!" + " transaction type: " + type
@@ -64,11 +64,11 @@ def make_order(currency, action, type="fixed"):
                     price = prices[0] - 1
                     print("$$$$$$ the order to ", action, " will be place with price ", price, " and amount of cryptos", amount, "\n")
                     placed_order = place_order(amount, price, book=currency+"_mxn" ,side=action.lower())
-                    time.sleep(0.5)
+                    time.sleep(2.5)
                     while len(get_open_orders(currency+'_mxn')) > 0:
                         cancel_order()
                         make_order(currency=currency, action=action, type=type)
-                        time.sleep(0.5)                
+                        time.sleep(2.5)                
                     return placed_order 
         else:
             return Exception('No crypto assets available for transaction!!')

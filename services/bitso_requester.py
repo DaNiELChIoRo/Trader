@@ -133,6 +133,8 @@ def get_available_books(book_name = 'eth_mxn'):
         print "\n$$$ min price for ", book_name, ": ", book["minimum_price"], " and max price: ", book["maximum_price"], " average: \n"
         print "books: ", books
         return books
+    except Exception as e:
+        print "exception occur, exception: ", e
 
 def get_tricker(book = 'btc_mxn'):
     r"""
